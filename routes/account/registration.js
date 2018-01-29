@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { employee } = require('./../../models/employee');
+const utility = require('./../../utility');
 
 router.post('/register', (req, res) => {
     var newEmployee = new employee({
@@ -12,7 +13,8 @@ router.post('/register', (req, res) => {
     });
 
     newEmployee.save().then((employee) => {
-        res.send(employee);
+        var response = utility.responseObject.responseObj(true,{employee},null);
+        res.send(response);
     }, (error) => {
 
         res.status(400).send({ errorMessage: "Supplied parameters are not valid " + error });

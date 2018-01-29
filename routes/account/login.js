@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const utility = require('./../../utility');
 //TODO: should we create seperate model for login because in login we only need 
 //email and password as a property
 const { employee } = require('./../../models/employee');
@@ -8,18 +9,22 @@ const authentication = require('./../../middleware/authentication/authentication
 router.post('/login', (req, res) => {
     employee.findOne({ "email": req.body.email, "password": req.body.password }).then((validEmployee) => {
         if (validEmployee == null) {
-            res.status(400).send({ errorMessage: 'invalid email/password' });
+            var response = utility.responseObject.responseObj(false,null,"invalid email or password",401);
+            res.status(401).send(response);
         }
         
         var payload = {
             email: validEmployee.email,
             type: validEmployee.userType
         }
-
-        res.send({ token: authentication.jwtAuthentication.generate(payload) });
+        var response = utility.responseObject.responseObj(true,
+            {token: authentication.jwtAuthentication.generate(payload)},
+            null,null);
+        res.send(response);
 
     }, (error) => {
-        res.status(400).send({ errorMessage: 'invalid email/password' });
+        var response = utility.responseObject.responseObj(false,null,"invalid email or password",401);
+        res.status(400).send(response);
     });
 });
 

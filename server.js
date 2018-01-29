@@ -1,4 +1,4 @@
-const { mongoose } = require('./dbconfig/mongodb.connect');
+const mongoose = require('./dbconfig/mongodb.connect');
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./routes');
