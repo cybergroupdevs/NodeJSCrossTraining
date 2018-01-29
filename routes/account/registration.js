@@ -13,11 +13,11 @@ router.post('/register', (req, res) => {
     });
 
     newEmployee.save().then((employee) => {
-        var response = utility.responseObject.responseObj(true,{employee},null);
+        var response = utility.responseObject.responseObj(true,{employee},null,null);
         res.send(response);
     }, (error) => {
-
-        res.status(400).send({ errorMessage: "Supplied parameters are not valid " + error });
+        var response = utility.responseObject.responseObj(false,null,"Supplied parameters are not valid" + error,400);
+        res.status(400).send(response);
     })
 });
 
