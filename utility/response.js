@@ -1,6 +1,6 @@
-var responseObject;
+var response;
 
-responseObject = {
+response = {
     /**
    * Response object structure.
    * @param status boolean value, will return status of request(pass/fail)
@@ -9,7 +9,7 @@ responseObject = {
    * @param statusCode Number, custom code
    */
 
-    responseObj:function(status,data,message,statusCode){
+    makeResponse:(status,data,message,statusCode) =>{
         var result = {
             status:status,
             data: data,
@@ -20,4 +20,4 @@ responseObject = {
     }
 };
 
-module.exports = {responseObject};
+module.exports = {response};
