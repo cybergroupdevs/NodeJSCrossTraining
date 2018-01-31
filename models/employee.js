@@ -26,7 +26,8 @@ var employee = mongoose.model('employee', {
         trim: true,
         minlength: 1,
         required: true
-    }
+    },
+    skills: []
 }, "employee");
 
 module.exports = { employee };
