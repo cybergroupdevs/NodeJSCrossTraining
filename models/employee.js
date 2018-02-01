@@ -1,33 +1,26 @@
+
+const dbSchema = require('./../schema/schema');
 const mongoose = require('mongoose');
 
-var employee = mongoose.model('employee', {
-    firstName: {
-        type: String,
-        trim: true
-    },
-    lastName: {
-        type: String,
-        trim: true
-    },
-    email: {
-        required: true,
-        type: String,
-        minlength: 1,
-        trim: true
-    },
-    password: {
-        required: true,
-        type: String,
-        trim: true,
-        minlength: 5
-    },
-    userType: {
-        type: String,
-        trim: true,
-        minlength: 1,
-        required: true
-    },
-    skills: []
-}, "employee");
+var employeeSchema = new mongoose.Schema(dbSchema.collections["employee"]);
 
-module.exports = { employee };
+employeeSchema.method = {
+
+};
+
+employeeSchema.statics = {
+
+    saveEmployeeToDatabase:(employeeObj) => {
+        return Employee.create(employeeObj).then ( (result) => {
+            console.log('employee saved with details', result);
+            return result;
+         });
+         return null;
+    },
+
+    getUserByEmailAndPassword:(emailAddress, password ) => {
+        return Employee.findOne({"emailAddress":emailAddress, "password":password}).exec();
+    }
+};
+
+var Employee = mongoose.model('employee', employeeSchema);
