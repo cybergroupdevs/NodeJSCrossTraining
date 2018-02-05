@@ -1,7 +1,6 @@
 const mongoose  = require('mongoose');
 const responseUtility = require('./../utility/response').response;
-const employeeRef = require('./../models/employee');
-const Employee = mongoose.model('employee');
+const Employee = require('./../models/employee').Employee; //model class
 const authentication = require('./../middleware/authentication/authentication.middleware');
 
 var employee = {
@@ -43,8 +42,12 @@ var employee = {
             }
             userObj['displayName'] = userObj['firstName'] + (userObj['middleName']?(" "+userObj['middleName']):"")+(userObj['lastName']?(" "+userObj['lastName']):"")
             userObj['isBlockedByAdmin'] = false;
-            userObj['isAdmin'] = false;
-            userObj['technicalSkills'] = options['technicalSkills'];
+            if(options['isAdmin']){
+                userObj['isAdmin'] = false;                
+            }
+            if(options['technicalSkills']){
+                userObj['technicalSkills'] = options['technicalSkills'];
+            }
             return Employee.saveEmployeeToDatabase(userObj).then((result)=>{
 
                 // var result = Employee.saveEmployeeToDatabase(userObj); 
@@ -64,7 +67,7 @@ var employee = {
     },
 
     signin:(options) => {
-        return Employee.getUserByEmailAndPassword(options['email'], options['password']).then((result)=>{
+        return Employee.getEmployeeByEmailAndPassword(options['email'], options['password']).then((result)=>{
             if (result == null) {
                 var response = responseUtility.makeResponse(false,null,"invalid email or password",401);
                 return response;

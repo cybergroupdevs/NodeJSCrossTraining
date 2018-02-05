@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { employee } = require('./../../controllers/employee');
+const Employee = require('./../../controllers/employee').employee;
 
 router.post('/login', (req, res) => {
-    return employee.signin(req.body).then((response) =>{
+    return Employee.signin(req.body).then((response) =>{
         res.send(response)
     })
 });
