@@ -2,15 +2,16 @@ const mongoose  = require('mongoose');
 const responseUtility = require('./../utility/response').response;
 const Employee = require('./../models/employee').Employee; //model class
 const authentication = require('./../middleware/authentication/authentication.middleware');
+const Promise = require('bluebird');
 
 var employee = {
     register:(options)=> {
         try{
             if(((options["userName"].toString()).trim()).indexOf(' ') >= 0){
-                return responseUtility.makeResponse(false,null,"userName can not have space", null); 
+                return Promise.join(responseUtility.makeResponse(false,null,'userName can not have space', null)); 
             }
-            if (options['password'] === undefined)
-                return responseUtility.makeResponse(false,null,"required password is missing", null);  
+            if (options['password'] === undefined || !options['password'])
+                return Promise.join(responseUtility.makeResponse(false,null,"required password is missing", null));  
             var password = options['password'];
             var userObj = { 'userType': "USER" }; // Initializing userObj with userType as 'USER'
             if (options['userName'])
@@ -57,13 +58,13 @@ var employee = {
                 }
                 var response = responseUtility.makeResponse(false,null,"Supplied parameters are not valid" + error,400);
                 return response;
-            })
+            }, (error)=>{
+                return Promise.join(responseUtility.makeResponse(false,null,"Supplied parameters are not valid" + error,400));
+            });
         }
         catch(error){
-            var response = responseUtility.makeResponse(false,null,"Supplied parameters are not valid" + error,400);
-            return response;
+            return Promise.join(responseUtility.makeResponse(false,null,"Supplied parameters are not valid" + error,400));
         }
-
     },
 
     signin:(options) => {
@@ -80,7 +81,14 @@ var employee = {
             var response = responseUtility.makeResponse(true,{"token": authentication.jwtAuthentication.generate(payload)},
                 null,null);
             return response;
-        })
+        }, (error)=>{
+            return Promise.join(responseUtility.makeResponse(false,null,"Supplied parameters are not valid" + error,400));
+        });
+    },
+
+    search:(options) =>{
+        var searchType = options['searchType'];
+
     }
 };
 
