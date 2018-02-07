@@ -6,6 +6,12 @@ const authentication = require('./../middleware/authentication/authentication.mi
 //account folder
 router.use(require('./account'));
 
+
+router.get('/', (req, res) => {
+    res.send('test api');
+});
+
 router.use(authentication.jwtAuthentication.verify);
 router.use(require('./user'));
+
 module.exports = router;
