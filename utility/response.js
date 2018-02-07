@@ -17,7 +17,19 @@ response = {
             statusCode : statusCode ? statusCode : null
         };
         return result;
+    },
+    
+    validationError:(err) =>{
+        message = []
+        if (err) {
+            for (field in err.errors) {
+                message.push(err.errors[field].message);
+            }
+        }
+        return message[0]
     }
 };
+
+
 
 module.exports = {response};

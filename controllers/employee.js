@@ -7,17 +7,20 @@ const Promise = require('bluebird');
 var employee = {
     register:(options)=> {
         try{
-            if(((options["userName"].toString()).trim()).indexOf(' ') >= 0){
-                return Promise.join(responseUtility.makeResponse(false,null,'userName can not have space', null)); 
+            if(((options["employeeCode"].toString()).trim()).length == 0){
+                return Promise.join(responseUtility.makeResponse(false,null,'EmployeeCode can not be blank', null)); 
             }
             if (options['password'] === undefined || !options['password'])
                 return Promise.join(responseUtility.makeResponse(false,null,"required password is missing", null));  
             var password = options['password'];
             var userObj = { 'userType': "USER" }; // Initializing userObj with userType as 'USER'
-            if (options['userName'])
-                userObj.userName    = options['userName'].trim();
+            if (options['employeeCode'])
+                userObj.employeeCode    = options['employeeCode'].trim();
             if (options['emailAddress']){
                 userObj.emailAddress = options['emailAddress'].trim();
+            }
+            if(options['role']){
+                userObj.role = options['role'];
             }
             userObj.password = password
             userObj.passwordHash = password
@@ -50,20 +53,21 @@ var employee = {
                 userObj['technicalSkills'] = options['technicalSkills'];
             }
             return Employee.saveEmployeeToDatabase(userObj).then((result)=>{
-
-                // var result = Employee.saveEmployeeToDatabase(userObj); 
                 if(result){
                     var response = responseUtility.makeResponse(true,{employee:result},null,null);
                     return response;
                 }
-                var response = responseUtility.makeResponse(false,null,"Supplied parameters are not valid" + error,400);
+                var response = responseUtility.makeResponse(false,null,"Supplied parameters are not valid",400);
                 return response;
             }, (error)=>{
-                return Promise.join(responseUtility.makeResponse(false,null,"Supplied parameters are not valid" + error,400));
+                if(error.name === 'ValidationError'){
+                    return Promise.join(responseUtility.makeResponse(false,null,responseUtility.validationError(error),400));                    
+                }
+                return Promise.join(responseUtility.makeResponse(false,null,error,400));
             });
         }
         catch(error){
-            return Promise.join(responseUtility.makeResponse(false,null,"Supplied parameters are not valid" + error,400));
+            return Promise.join(responseUtility.makeResponse(false,null,error,400));
         }
     },
 
@@ -82,7 +86,7 @@ var employee = {
                 null,null);
             return response;
         }, (error)=>{
-            return Promise.join(responseUtility.makeResponse(false,null,"Supplied parameters are not valid" + error,400));
+            return Promise.join(responseUtility.makeResponse(false,null,error,400));
         });
     },
 
