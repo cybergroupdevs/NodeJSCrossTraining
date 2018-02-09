@@ -93,6 +93,20 @@ var employee = {
     search:(options) =>{
         var searchType = options['searchType'];
 
+    },
+
+    employeeList: (options) => {
+        return Employee.getEmployeeList(options['pageNo'], options['filter'], options['limit']).then((result) => {
+            if (!result) {
+                var response = responseUtility.makeResponse(false, null, "Invalid request", 401);
+                return response;
+            }
+
+            var response = responseUtility.makeResponse(true, result, "List returned", null);
+            return response;
+        }, (error) => {
+            return Promise.join(responseUtility.makeResponse(false, null, error, 400));
+        });
     }
 };
 
