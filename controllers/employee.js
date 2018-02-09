@@ -82,7 +82,7 @@ var employee = {
                 email: result.email,
                 type: result.userType
             }
-            var response = responseUtility.makeResponse(true,{"token": authentication.jwtAuthentication.generate(payload)},
+            var response = responseUtility.makeResponse(true,{employee : result, "token": authentication.jwtAuthentication.generate(payload)},
                 null,null);
             return response;
         }, (error)=>{
