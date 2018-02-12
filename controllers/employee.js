@@ -50,7 +50,7 @@ var employee = {
                 userObj['isAdmin'] = false;                
             }
             if(options['technicalSkills']){
-                userObj['technicalSkills'] = options['technicalSkills'];
+                userObj['technicalSkills'] = options['technicalSkills'].split(',');
             }
             return Employee.saveEmployeeToDatabase(userObj).then((result)=>{
                 if(result){
@@ -82,7 +82,7 @@ var employee = {
                 email: result.email,
                 type: result.userType
             }
-            var response = responseUtility.makeResponse(true,{"token": authentication.jwtAuthentication.generate(payload)},
+            var response = responseUtility.makeResponse(true,{employee : result, "token": authentication.jwtAuthentication.generate(payload)},
                 null,null);
             return response;
         }, (error)=>{
@@ -106,7 +106,41 @@ var employee = {
                 response = responseUtility.makeResponse(true,userObj,"",202);
                 return response;
         })
+    },
+
+    employeeList: (options) => {
+        return Employee.getEmployeeList(options['pageNo'], options['limit'],
+            options['skills'], options['gender']).then((result) => {
+                if (!result) {
+                    var response = responseUtility.makeResponse(false, null, "Invalid request", 401);
+                    return response;
+                }
+
+                var response = responseUtility.makeResponse(true, result, "List returned", null);
+                return response;
+            }, (error) => {
+                return Promise.join(responseUtility.makeResponse(false, null, error, 400));
+            });
+    },
+    
+    deleteUser:(options) => {
+        return Employee.deleteEmployeeFromDatabase(options['emailAddress']).then((result)=>{
+
+                if(result){
+                var response = responseUtility.makeResponse(true,{employee:result},null,null);
+                return response;
+            }
+            else{
+                var response = responseUtility.makeResponse(false,null,"user with this email doesn't exist",400);
+                return response;
+            }
+                }, (error)=>{
+                    console.log(error);
+                    return Promise.join(responseUtility.makeResponse(false,null,error,400));
+                })
     }
+
+
 };
 
 module.exports = {employee};
