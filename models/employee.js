@@ -51,7 +51,12 @@ employeeSchema.statics = {
         }
         criteria = (criteria["$and"].length > 0) ? criteria : {};
         return Employee.find(criteria).skip((pageNo - 1) * limit).limit(limit).exec();
+    },
+
+    deleteEmployeeFromDatabase :(emailAddress) => {
+        return Employee.findOneAndRemove({"emailAddress":emailAddress}).exec();
     }
+
 };
 
 var Employee = mongoose.model('Employee', employeeSchema);

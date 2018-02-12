@@ -108,7 +108,26 @@ var employee = {
             }, (error) => {
                 return Promise.join(responseUtility.makeResponse(false, null, error, 400));
             });
+    },
+    
+    deleteUser:(options) => {
+        return Employee.deleteEmployeeFromDatabase(options['emailAddress']).then((result)=>{
+
+                if(result){
+                var response = responseUtility.makeResponse(true,{employee:result},null,null);
+                return response;
+            }
+            else{
+                var response = responseUtility.makeResponse(false,null,"user with this email doesn't exist",400);
+                return response;
+            }
+                }, (error)=>{
+                    console.log(error);
+                    return Promise.join(responseUtility.makeResponse(false,null,error,400));
+                })
     }
+
+
 };
 
 module.exports = {employee};
