@@ -92,7 +92,20 @@ var employee = {
 
     search:(options) =>{
         var searchType = options['searchType'];
+        })
+    },
 
+    detail:(options) => {
+        return Employee.getUserById(options['userId']).then((result)=>{
+            var response;
+            if (result == null) {
+                response = responseUtility.makeResponse(false,null,"Employee Not Exist.",401);
+                return response;
+            }
+
+                response = responseUtility.makeResponse(true,userObj,"",202);
+                return response;
+        })
     }
 };
 
