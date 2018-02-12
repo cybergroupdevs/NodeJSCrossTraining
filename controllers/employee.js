@@ -92,7 +92,6 @@ var employee = {
 
     search:(options) =>{
         var searchType = options['searchType'];
-        })
     },
 
     detail:(options) => {
