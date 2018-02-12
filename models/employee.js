@@ -23,8 +23,9 @@ employeeSchema.statics = {
         return Employee.findOne({"emailAddress":emailAddress, "password":password}).exec();
     },
 
-    getUserById:(emailAddress, password ) => {
-        return Employee.findOne({"userId":ObjectId}).exec();
+    getUserById:(userId) => {
+        console.log(userId)
+        return Employee.findOne({_id :userId}).exec();
     },
 
     getEmployeeList: (pageNo, limit, skills, gender) => {

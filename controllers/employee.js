@@ -95,6 +95,10 @@ var employee = {
     },
 
     detail:(options) => {
+        if(!options['userId'])
+        {
+            return Promise.join(responseUtility.makeResponse(false,null,"User id is missing", null));  
+        }
         return Employee.getUserById(options['userId']).then((result)=>{
             var response;
             if (result == null) {
@@ -102,9 +106,11 @@ var employee = {
                 return response;
             }
 
-                response = responseUtility.makeResponse(true,userObj,"",202);
+                response = responseUtility.makeResponse(true, result,"",202);
                 return response;
-        })
+        }, (error) => {
+            return Promise.join(responseUtility.makeResponse(false, null, error, 400));
+        });
     },
 
     employeeList: (options) => {

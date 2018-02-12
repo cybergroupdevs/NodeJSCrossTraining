@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { employee } = require('./../../controllers/employee');
 
-router.post('/userdetail', (req, res) => {
-    return employee.detail(req.body).then((response) =>{
+router.get('/userdetail', (req, res) => {
+    return employee.detail(req.query).then((response) =>{
         if(Array.isArray(response)){
             response = response[0];
         }
