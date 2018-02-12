@@ -50,7 +50,7 @@ var employee = {
                 userObj['isAdmin'] = false;                
             }
             if(options['technicalSkills']){
-                userObj['technicalSkills'] = options['technicalSkills'];
+                userObj['technicalSkills'] = options['technicalSkills'].split(',');
             }
             return Employee.saveEmployeeToDatabase(userObj).then((result)=>{
                 if(result){
@@ -96,17 +96,18 @@ var employee = {
     },
 
     employeeList: (options) => {
-        return Employee.getEmployeeList(options['pageNo'], options['filter'], options['limit']).then((result) => {
-            if (!result) {
-                var response = responseUtility.makeResponse(false, null, "Invalid request", 401);
-                return response;
-            }
+        return Employee.getEmployeeList(options['pageNo'], options['limit'],
+            options['skills'], options['gender']).then((result) => {
+                if (!result) {
+                    var response = responseUtility.makeResponse(false, null, "Invalid request", 401);
+                    return response;
+                }
 
-            var response = responseUtility.makeResponse(true, result, "List returned", null);
-            return response;
-        }, (error) => {
-            return Promise.join(responseUtility.makeResponse(false, null, error, 400));
-        });
+                var response = responseUtility.makeResponse(true, result, "List returned", null);
+                return response;
+            }, (error) => {
+                return Promise.join(responseUtility.makeResponse(false, null, error, 400));
+            });
     }
 };
 
