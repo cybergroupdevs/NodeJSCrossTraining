@@ -24,7 +24,6 @@ employeeSchema.statics = {
     },
 
     getUserById:(userId) => {
-        console.log(userId)
         return Employee.findOne({_id :userId}).exec();
     },
 
