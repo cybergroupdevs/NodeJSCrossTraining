@@ -3,5 +3,5 @@ const router = express.Router();
 
 router.use(require('./user'));
 router.use(require('./employeelist'));
-router.use(require('./userdetail'));
+router.use(require('./userDetail'));
 module.exports = router;
