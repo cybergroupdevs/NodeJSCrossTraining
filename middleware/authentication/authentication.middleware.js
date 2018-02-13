@@ -6,12 +6,12 @@ var jwtAuthentication =
         verify: (req, res, next) => {
             var token = req.headers["token"];
             if (token) {
-                jwt.verify(token, appConfigKeys.jwt_secret_key, (err, token) => {
+                jwt.verify(token, appConfigKeys.jwt_secret_key, (err, result) => {
                     if (err) {
                         res.send({ errorMessage: "error: invalid token" });
                     }
                     else {
-                        req.user = token;
+                        req.user = result;
                         next();
                     }
                 });

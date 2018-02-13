@@ -32,6 +32,9 @@ collections = {
 		technicalSkills			:[],
 		createdAt:        		{type:  Date,   default: Date.now},
 		updatedAt:        		{type:  Date,   default: Date.now}
+	},
+	Skills:{
+		name:					{type:String, required: true}
 	}
 };
 

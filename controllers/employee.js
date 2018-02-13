@@ -86,8 +86,9 @@ var employee = {
             }
             
             var payload = {
-                email: result.email,
-                type: result.userType
+                email: result.emailAddress,
+                type: result.userType,
+                userId:result._id
             }
             var response = responseUtility.makeResponse(true,{employee : result, "token": authentication.jwtAuthentication.generate(payload)},
                 null,null);
