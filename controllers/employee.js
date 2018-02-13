@@ -50,7 +50,11 @@ var employee = {
                 userObj['isAdmin'] = false;                
             }
             if(options['technicalSkills']){
-                userObj['technicalSkills'] = options['technicalSkills'].split(',');
+                var technicalSkills = options['technicalSkills']
+                if(!Array.isArray(technicalSkills)){
+                    technicalSkills = options['technicalSkills'].split(',');
+                }
+                userObj['technicalSkills'] = technicalSkills;
             }
             return Employee.saveEmployeeToDatabase(userObj).then((result)=>{
                 if(result){
@@ -62,6 +66,9 @@ var employee = {
             }, (error)=>{
                 if(error.name === 'ValidationError'){
                     return Promise.join(responseUtility.makeResponse(false,null,responseUtility.validationError(error),400));                    
+                }
+                if(error && error.code === 11000){
+                    return Promise.join(responseUtility.makeResponse(false,null,"Employee with same emailAddress or employeecode is already exists",400)); 
                 }
                 return Promise.join(responseUtility.makeResponse(false,null,error,400));
             });

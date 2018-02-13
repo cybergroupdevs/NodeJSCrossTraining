@@ -3,7 +3,8 @@ const dbSchema = require('./../schema/schema');
 const { appConfigKeys } = require('./../appconfig/appconfig');
 
 var employeeSchema = new mongoose.Schema(dbSchema.collections["employee"]);
-
+employeeSchema.index({'emailAddress' : 1}, {unique : true});
+employeeSchema.index({'employeeCode' : 1}, {unique : true});
 
 employeeSchema.method = {
 
