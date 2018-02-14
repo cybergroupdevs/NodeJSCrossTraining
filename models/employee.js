@@ -47,11 +47,10 @@ employeeSchema.statics = {
         if (skills) {
             skills = skills.split(",");  //Getting array from comma seprated list of filters
         }
-
         var criteria = { "$and": [] };
         if (skills && skills.length > 0) {
             skills = skills.map((s) => { return new RegExp(s, "i") }) //handeling diff case for filters
-            criteria["$and"].push({ technicalSkills: { "$in": skills } })
+            criteria["$and"].push({ skills: { "$in": skills } })
         }
 
         if (gender) {
