@@ -26,7 +26,6 @@ var skills = {
                 }
 
                 var response = responseUtility.makeResponse(true, result, "Skill added successfully", null);
-                console.log(response);
                 return response;
             }, (error) => {
                 if (error && error.code === 11000) {
@@ -46,7 +45,6 @@ var skills = {
             }
             var response;
             response = responseUtility.makeResponse(true, result, "Skill list returned", null);
-            console.log(response);
             return response;
         }, (error) => {
             return Promise.join(responseUtility.makeResponse(false, null, error, 400));
