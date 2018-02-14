@@ -1,13 +1,17 @@
 const mongoose = require('mongoose');
 const dbSchema = require('./../schema/schema');
 const { appConfigKeys } = require('./../appconfig/appconfig');
+const crypto = require('./../utility/response').encrypt_decrypt;
 
 var employeeSchema = new mongoose.Schema(dbSchema.collections["employee"]);
 employeeSchema.index({'emailAddress' : 1}, {unique : true});
 employeeSchema.index({'employeeCode' : 1}, {unique : true});
 
-employeeSchema.method = {
-
+employeeSchema.methods = {
+	validatePassword:(password, passwordHash, passwordSalt) => {
+        var encyrptKey = crypto.encrypt(password,passwordSalt);
+        return (encyrptKey == passwordHash);	
+        }
 };
 
 employeeSchema.statics = {
@@ -20,8 +24,8 @@ employeeSchema.statics = {
         return null;
     },
 
-    getEmployeeByEmailAndPassword: (emailAddress, password) => {
-        return Employee.findOne({"emailAddress":emailAddress, "password":password}).exec();
+    getEmployeeByEmail: (emailAddress) => {
+        return Employee.findOne({"emailAddress":emailAddress}).exec();
     },
 
     getUserById:(userId) => {

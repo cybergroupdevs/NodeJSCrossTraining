@@ -1,5 +1,6 @@
 const mongoose  = require('mongoose');
 const responseUtility = require('./../utility/response').response;
+const crypto = require('./../utility/response').encrypt_decrypt;
 const Employee = require('./../models/employee').Employee; //model class
 const authentication = require('./../middleware/authentication/authentication.middleware');
 const Promise = require('bluebird');
@@ -23,8 +24,9 @@ var employee = {
                 userObj.role = options['role'];
             }
             userObj.password = password
-            userObj.passwordHash = password
-            userObj.passwordSalt = password
+            var passwordSalt = crypto.createSalt(16);
+            userObj.passwordHash = crypto.encrypt(password,passwordSalt);
+            userObj.passwordSalt = passwordSalt;
             if (options['firstName']){
                 userObj.firstName = options['firstName'];
             }
@@ -44,17 +46,45 @@ var employee = {
             if (options['gender']){
                 userObj.gender = options['gender'];
             }
+            if(options['address']){
+                userObj.address = options['address'];
+            }
+            if(options['userType']){
+                userObj.userType = options['userType'];
+            }
+            if(options['location']){
+                userObj.location = options['location'];
+            }
+            if(options['mobileNumber']){
+                userObj.mobileNumber = options['mobileNumber'];
+            }
+            if(options['city']){
+                userObj.city = options['city'];
+            }
+            if(options['country']){
+                userObj.country = options['country'];
+            }
+            if(options['state']){
+                userObj.state = options['state'];
+            }
+            if(options['country']){
+                userObj.country = options['country'];
+            }
+            if(options['dateOfBirth']){
+                userObj.dateOfBirth = new Date(options['dateOfBirth']);
+            }
+
             userObj['displayName'] = userObj['firstName'] + (userObj['middleName']?(" "+userObj['middleName']):"")+(userObj['lastName']?(" "+userObj['lastName']):"")
             userObj['isBlockedByAdmin'] = false;
             if(options['isAdmin']){
                 userObj['isAdmin'] = false;                
             }
-            if(options['technicalSkills']){
-                var technicalSkills = options['technicalSkills']
+            if(options['skills']){
+                var technicalSkills = options['skills']
                 if(!Array.isArray(technicalSkills)){
-                    technicalSkills = options['technicalSkills'].split(',');
+                    technicalSkills = options['skills'].split(',');
                 }
-                userObj['technicalSkills'] = technicalSkills;
+                userObj['skills'] = technicalSkills;
             }
             return Employee.saveEmployeeToDatabase(userObj).then((result)=>{
                 if(result){
@@ -79,18 +109,20 @@ var employee = {
     },
 
     signin:(options) => {
-        return Employee.getEmployeeByEmailAndPassword(options['email'], options['password']).then((result)=>{
-            if (result == null) {
+        return Employee.getEmployeeByEmail(options['emailAddress']).then((userObj)=>{
+
+            console.log('############# userObje ####### and password', userObj,options['password']);
+
+            if (userObj == null || (!userObj.validatePassword(options['password'], userObj.passwordHash, userObj.passwordSalt))) {
                 var response = responseUtility.makeResponse(false,null,"invalid email or password",401);
                 return response;
             }
-            
             var payload = {
-                email: result.emailAddress,
-                type: result.userType,
-                userId:result._id
+                email: userObj.emailAddress,
+                type: userObj.userType,
+                userId:userObj._id
             }
-            var response = responseUtility.makeResponse(true,{employee : result, "token": authentication.jwtAuthentication.generate(payload)},
+            var response = responseUtility.makeResponse(true,{employee : userObj, "token": authentication.jwtAuthentication.generate(payload)},
                 null,null);
             return response;
         }, (error)=>{
@@ -102,10 +134,10 @@ var employee = {
         var searchType = options['searchType'];
     },
 
-    detail:(options) => {
-        if(!options['userId'])
-        {
-            return Promise.join(responseUtility.makeResponse(false,null,"User id is missing", null));  
+    detail:(options, userObj) => {
+        if(!options['userId']){
+            options['userId'] = userObj.userId; // current user details
+            // return Promise.join(responseUtility.makeResponse(false,null,"User id is missing", null));  
         }
         return Employee.getUserById(options['userId']).then((result)=>{
             var response;
@@ -138,8 +170,7 @@ var employee = {
     
     deleteUser:(options) => {
         return Employee.deleteEmployeeFromDatabase(options['emailAddress']).then((result)=>{
-
-                if(result){
+            if(result){
                 var response = responseUtility.makeResponse(true,{employee:result},null,null);
                 return response;
             }
@@ -147,10 +178,10 @@ var employee = {
                 var response = responseUtility.makeResponse(false,null,"user with this email doesn't exist",400);
                 return response;
             }
-                }, (error)=>{
-                    console.log(error);
-                    return Promise.join(responseUtility.makeResponse(false,null,error,400));
-                })
+        }, (error)=>{
+                console.log(error);
+                return Promise.join(responseUtility.makeResponse(false,null,error,400));
+            })
     }
 
 

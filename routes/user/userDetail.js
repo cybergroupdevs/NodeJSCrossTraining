@@ -3,7 +3,7 @@ const router = express.Router();
 const Employee = require('./../../controllers/employee').employee;
 
 router.get('/userdetail', (req, res) => {
-    return Employee.detail(req.query).then((response) =>{
+    return Employee.detail(req.query, req.user).then((response) =>{
         if(Array.isArray(response)){
             response = response[0];
         }
