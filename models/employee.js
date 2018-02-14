@@ -61,8 +61,8 @@ employeeSchema.statics = {
         return Employee.find(criteria).skip((pageNo - 1) * limit).limit(limit).exec();
     },
 
-    deleteEmployeeFromDatabase :(emailAddress) => {
-        return Employee.findOneAndRemove({"emailAddress":emailAddress}).exec();
+    deleteEmployeeFromDatabase :(userId) => {
+        return Employee.findOneAndRemove({_id :userId}).exec();
     }
 
 };

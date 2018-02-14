@@ -169,13 +169,13 @@ var employee = {
     },
     
     deleteUser:(options) => {
-        return Employee.deleteEmployeeFromDatabase(options['emailAddress']).then((result)=>{
+        return Employee.deleteEmployeeFromDatabase(options['userId']).then((result)=>{
             if(result){
                 var response = responseUtility.makeResponse(true,{employee:result},null,null);
                 return response;
             }
             else{
-                var response = responseUtility.makeResponse(false,null,"user with this email doesn't exist",400);
+                var response = responseUtility.makeResponse(false,null,"user with this user id doesn't exist",400);
                 return response;
             }
         }, (error)=>{
