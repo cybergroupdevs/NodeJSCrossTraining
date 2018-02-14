@@ -29,9 +29,9 @@ collections = {
 		createdAt:        		{type:  Date,   default: Date.now},
 		updatedAt:        		{type:  Date,   default: Date.now}
 	},
-	Skills:{
-		name:					{type:String, required: true},
-		type:					{type:String, required: true}
+	skills: {
+		name: { type: String, required: true },
+		type: { type: String, required: true }
 	},
 	Projects:{
 		name:					{type:String, required: true},

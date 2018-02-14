@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const dbSchema = require('./../schema/schema');
-const { appConfigKeys } = require('./../appconfig/appconfig');
 const crypto = require('./../utility/response').encrypt_decrypt;
 
 var employeeSchema = new mongoose.Schema(dbSchema.collections["employee"]);
@@ -34,16 +33,17 @@ employeeSchema.statics = {
 
     getEmployeeList: (pageNo, limit, skills, gender) => {
 
-        if (!limit) {
-            limit = appConfigKeys.pageLimit;
-        } else {
-            limit = parseInt(limit);
-        }
-        if (!pageNo) {
-            pageNo = 1;
-        } else {
-            pageNo = parseInt(pageNo);
-        }
+        // if (!limit) {
+        //     limit = appConfigKeys.pageLimit;
+        // } else {
+        //     limit = parseInt(limit);
+        // }
+        // if (!pageNo) {
+        //     pageNo = 1;
+        // } else {
+        //     pageNo = parseInt(pageNo);
+        // }
+        
         if (skills) {
             skills = skills.split(",");  //Getting array from comma seprated list of filters
         }
