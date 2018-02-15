@@ -5,7 +5,7 @@ const Employee = require('./../../controllers/employee').employee;
 
 //Added api to delete user
 router.delete('/deleteEmployee', (req, res) => {
-    return Employee.deleteUser(req.body).then((response) =>{
+    return Employee.deleteUser(req.body, req.user).then((response) =>{
         res.send(response)
     },(error)=>{
         res.send(error)

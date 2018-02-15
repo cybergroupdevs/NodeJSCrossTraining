@@ -1,4 +1,4 @@
-const mongoose  = require('mongoose');
+const mongoose = require('mongoose');
 const responseUtility = require('./../utility/response').response;
 const crypto = require('./../utility/response').encrypt_decrypt;
 const Employee = require('./../models/employee').Employee; //model class
@@ -6,148 +6,148 @@ const authentication = require('./../middleware/authentication/authentication.mi
 const Promise = require('bluebird');
 
 var employee = {
-    register:(options)=> {
-        try{
-            if(((options["employeeCode"].toString()).trim()).length == 0){
-                return Promise.join(responseUtility.makeResponse(false,null,'EmployeeCode can not be blank', null)); 
+    register: (options) => {
+        try {
+            if (((options["employeeCode"].toString()).trim()).length == 0) {
+                return Promise.join(responseUtility.makeResponse(false, null, 'EmployeeCode can not be blank', null));
             }
             if (options['password'] === undefined || !options['password'])
-                return Promise.join(responseUtility.makeResponse(false,null,"required password is missing", null));  
+                return Promise.join(responseUtility.makeResponse(false, null, "required password is missing", null));
             var password = options['password'];
             var userObj = { 'userType': "USER" }; // Initializing userObj with userType as 'USER'
             if (options['employeeCode'])
-                userObj.employeeCode    = options['employeeCode'].trim();
-            if (options['emailAddress']){
+                userObj.employeeCode = options['employeeCode'].trim();
+            if (options['emailAddress']) {
                 userObj.emailAddress = options['emailAddress'].trim();
             }
-            if(options['role']){
+            if (options['role']) {
                 userObj.role = options['role'];
             }
             userObj.password = password
             var passwordSalt = crypto.createSalt(16);
-            userObj.passwordHash = crypto.encrypt(password,passwordSalt);
+            userObj.passwordHash = crypto.encrypt(password, passwordSalt);
             userObj.passwordSalt = passwordSalt;
-            if (options['firstName']){
+            if (options['firstName']) {
                 userObj.firstName = options['firstName'];
             }
-            else{
-                userObj.firstName   = options['userName'].trim();
+            else {
+                userObj.firstName = options['userName'].trim();
             }
-            if (options['middleName']){
+            if (options['middleName']) {
                 userObj.middleName = options['middleName'];
-            }else{
+            } else {
                 userObj.middleName = ""
             }
-            if (options['lastName']){
+            if (options['lastName']) {
                 userObj.lastName = options['lastName'];
-            }else{
+            } else {
                 userObj.lastName = ""
             }
-            if (options['gender']){
+            if (options['gender']) {
                 userObj.gender = options['gender'];
             }
-            if(options['address']){
+            if (options['address']) {
                 userObj.address = options['address'];
             }
-            if(options['userType']){
+            if (options['userType']) {
                 userObj.userType = options['userType'];
             }
-            if(options['location']){
+            if (options['location']) {
                 userObj.location = options['location'];
             }
-            if(options['mobileNumber']){
+            if (options['mobileNumber']) {
                 userObj.mobileNumber = options['mobileNumber'];
             }
-            if(options['city']){
+            if (options['city']) {
                 userObj.city = options['city'];
             }
-            if(options['country']){
+            if (options['country']) {
                 userObj.country = options['country'];
             }
-            if(options['state']){
+            if (options['state']) {
                 userObj.state = options['state'];
             }
-            if(options['country']){
+            if (options['country']) {
                 userObj.country = options['country'];
             }
-            if(options['dateOfBirth']){
+            if (options['dateOfBirth']) {
                 userObj.dateOfBirth = new Date(options['dateOfBirth']);
             }
 
-            userObj['displayName'] = userObj['firstName'] + (userObj['middleName']?(" "+userObj['middleName']):"")+(userObj['lastName']?(" "+userObj['lastName']):"")
+            userObj['displayName'] = userObj['firstName'] + (userObj['middleName'] ? (" " + userObj['middleName']) : "") + (userObj['lastName'] ? (" " + userObj['lastName']) : "")
             userObj['isBlockedByAdmin'] = false;
-            if(options['isAdmin']){
-                userObj['isAdmin'] = false;                
+            if (options['isAdmin']) {
+                userObj['isAdmin'] = false;
             }
-            if(options['skills']){
+            if (options['skills']) {
                 var technicalSkills = options['skills']
-                if(!Array.isArray(technicalSkills)){
+                if (!Array.isArray(technicalSkills)) {
                     technicalSkills = options['skills'].split(',');
                 }
                 userObj['skills'] = technicalSkills;
             }
-            return Employee.saveEmployeeToDatabase(userObj).then((result)=>{
-                if(result){
-                    var response = responseUtility.makeResponse(true,{employee:result},null,null);
+            return Employee.saveEmployeeToDatabase(userObj).then((result) => {
+                if (result) {
+                    var response = responseUtility.makeResponse(true, { employee: result }, null, null);
                     return response;
                 }
-                var response = responseUtility.makeResponse(false,null,"Supplied parameters are not valid",400);
+                var response = responseUtility.makeResponse(false, null, "Supplied parameters are not valid", 400);
                 return response;
-            }, (error)=>{
-                if(error.name === 'ValidationError'){
-                    return Promise.join(responseUtility.makeResponse(false,null,responseUtility.validationError(error),400));                    
+            }, (error) => {
+                if (error.name === 'ValidationError') {
+                    return Promise.join(responseUtility.makeResponse(false, null, responseUtility.validationError(error), 400));
                 }
-                if(error && error.code === 11000){
-                    return Promise.join(responseUtility.makeResponse(false,null,"Employee with same emailAddress or employeecode is already exists",400)); 
+                if (error && error.code === 11000) {
+                    return Promise.join(responseUtility.makeResponse(false, null, "Employee with same emailAddress or employeecode is already exists", 400));
                 }
-                return Promise.join(responseUtility.makeResponse(false,null,error,400));
+                return Promise.join(responseUtility.makeResponse(false, null, error, 400));
             });
         }
-        catch(error){
-            return Promise.join(responseUtility.makeResponse(false,null,error,400));
+        catch (error) {
+            return Promise.join(responseUtility.makeResponse(false, null, error, 400));
         }
     },
 
-    signin:(options) => {
-        return Employee.getEmployeeByEmail(options['emailAddress']).then((userObj)=>{
+    signin: (options) => {
+        return Employee.getEmployeeByEmail(options['emailAddress']).then((userObj) => {
 
-            console.log('############# userObje ####### and password', userObj,options['password']);
+            console.log('############# userObje ####### and password', userObj, options['password']);
 
             if (userObj == null || (!userObj.validatePassword(options['password'], userObj.passwordHash, userObj.passwordSalt))) {
-                var response = responseUtility.makeResponse(false,null,"invalid email or password",401);
+                var response = responseUtility.makeResponse(false, null, "invalid email or password", 401);
                 return response;
             }
             var payload = {
                 email: userObj.emailAddress,
                 type: userObj.userType,
-                userId:userObj._id
+                userId: userObj._id
             }
-            var response = responseUtility.makeResponse(true,{employee : userObj, "token": authentication.jwtAuthentication.generate(payload)},
-                null,null);
+            var response = responseUtility.makeResponse(true, { employee: userObj, "token": authentication.jwtAuthentication.generate(payload) },
+                null, null);
             return response;
-        }, (error)=>{
-            return Promise.join(responseUtility.makeResponse(false,null,error,400));
+        }, (error) => {
+            return Promise.join(responseUtility.makeResponse(false, null, error, 400));
         });
     },
 
-    search:(options) =>{
+    search: (options) => {
         var searchType = options['searchType'];
     },
 
-    detail:(options, userObj) => {
-        if(!options['userId']){
+    detail: (options, userObj) => {
+        if (!options['userId']) {
             options['userId'] = userObj.userId; // current user details
             // return Promise.join(responseUtility.makeResponse(false,null,"User id is missing", null));  
         }
-        return Employee.getUserById(options['userId']).then((result)=>{
+        return Employee.getUserById(options['userId']).then((result) => {
             var response;
             if (result == null) {
-                response = responseUtility.makeResponse(false,null,"Employee Not Exist.",401);
+                response = responseUtility.makeResponse(false, null, "Employee Not Exist.", 401);
                 return response;
             }
 
-                response = responseUtility.makeResponse(true, result,"",202);
-                return response;
+            response = responseUtility.makeResponse(true, result, "", 202);
+            return response;
         }, (error) => {
             return Promise.join(responseUtility.makeResponse(false, null, error, 400));
         });
@@ -167,24 +167,29 @@ var employee = {
                 return Promise.join(responseUtility.makeResponse(false, null, error, 400));
             });
     },
-    
-    deleteUser:(options) => {
-        return Employee.deleteEmployeeFromDatabase(options['userId']).then((result)=>{
-            if(result){
-                var response = responseUtility.makeResponse(true,{employee:result},null,null);
-                return response;
-            }
-            else{
-                var response = responseUtility.makeResponse(false,null,"user with this user id doesn't exist",400);
-                return response;
-            }
-        }, (error)=>{
+
+    deleteUser: (options, userObj) => {
+        if (userObj.type === "USER") {
+            return Promise.join(responseUtility.makeResponse(false, null, "you can't process this request please contact to admin", 400));
+        }
+        else {
+            return Employee.deleteEmployeeFromDatabase(options['userId']).then((result) => {
+                if (result) {
+                    var response = responseUtility.makeResponse(true, { employee: result }, null, null);
+                    return response;
+                }
+                else {
+                    var response = responseUtility.makeResponse(false, null, "user with this user id doesn't exist", 400);
+                    return response;
+                }
+            }, (error) => {
                 console.log(error);
-                return Promise.join(responseUtility.makeResponse(false,null,error,400));
+                return Promise.join(responseUtility.makeResponse(false, null, error, 400));
             })
+        }
     }
 
 
 };
 
-module.exports = {employee};
+module.exports = { employee };
