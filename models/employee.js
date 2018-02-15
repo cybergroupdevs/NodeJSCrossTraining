@@ -33,17 +33,6 @@ employeeSchema.statics = {
 
     getEmployeeList: (pageNo, limit, skills, gender) => {
 
-        // if (!limit) {
-        //     limit = appConfigKeys.pageLimit;
-        // } else {
-        //     limit = parseInt(limit);
-        // }
-        // if (!pageNo) {
-        //     pageNo = 1;
-        // } else {
-        //     pageNo = parseInt(pageNo);
-        // }
-        
         if (skills) {
             skills = skills.split(",");  //Getting array from comma seprated list of filters
         }

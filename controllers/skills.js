@@ -7,7 +7,7 @@ const Promise = require('bluebird');
 var skills = {
     addskill: (options, userObj) => {
         try {
-            if (userObj.type === 'USER') {
+            if (userObj.userType === 'USER') {
                 return Promise.join(responseUtility.makeResponse(false, null, "Not having valid permissions to add skill", null));
             }
             if (!options['name']) {
@@ -18,7 +18,10 @@ var skills = {
             // }
 
             var skillObj = { 'name': options['name'].toUpperCase()}; // Initializing skill with name coming as param
-            skillObj.type = 'language'
+            
+            if (options['type']) {
+                skillObj.type = options['type'];
+            }
             return Skill.addskill(skillObj).then((result) => {
                 if (!result) {
                     var response = responseUtility.makeResponse(false, null, "Invalid request", 401);

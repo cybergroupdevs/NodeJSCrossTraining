@@ -119,8 +119,8 @@ var employee = {
                 return response;
             }
             var payload = {
-                email: userObj.emailAddress,
-                type: userObj.userType,
+                emailAddress: userObj.emailAddress,
+                userType: userObj.userType,
                 userId: userObj._id
             }
             var response = responseUtility.makeResponse(true, { employee: userObj, "token": authentication.jwtAuthentication.generate(payload) },
@@ -191,7 +191,7 @@ var employee = {
     },
 
     deleteUser: (options, userObj) => {
-        if (userObj.type === "USER") {
+        if (userObj.userType === "USER") {
             return Promise.join(responseUtility.makeResponse(false, null, "you can't process this request please contact to admin", 400));
         }
         else {

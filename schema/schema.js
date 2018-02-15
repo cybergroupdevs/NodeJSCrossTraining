@@ -31,7 +31,7 @@ collections = {
 	},
 	skills: {
 		name: { type: String, required: true },
-		type: { type: String, required: true }
+		type: { type: String, required: true , default: 'TECHNICAL' }
 	},
 	Projects:{
 		name:					{type:String, required: true},
