@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose  = require('mongoose');
 const responseUtility = require('./../utility/response').response;
 const crypto = require('./../utility/response').encrypt_decrypt;
 const Employee = require('./../models/employee').Employee; //model class
 const authentication = require('./../middleware/authentication/authentication.middleware');
 const Promise = require('bluebird');
+const { appConfigKeys } = require('./../appconfig/appconfig');
 
 var employee = {
     register: (options) => {
@@ -154,7 +155,28 @@ var employee = {
     },
 
     employeeList: (options) => {
-        return Employee.getEmployeeList(options['pageNo'], options['limit'],
+        //Handling page number
+        var pageNo = options['pageNo'];
+        if(!pageNo || pageNo <= 0) {
+            return Promise.join(responseUtility.makeResponse(false, null, "Page no should not be empty or 0", null));
+        }
+        if(isNaN(pageNo)) {
+            return Promise.join(responseUtility.makeResponse(false, null, "Page number shound be a numeric", null));
+        }
+        pageNo = parseInt(pageNo);
+       
+        //Handling page limit
+        var limit = options['limit'];
+        if (!limit) {
+            limit = appConfigKeys.pageLimit; //using default page limit from config
+        } else if (limit <= 0) {
+            return Promise.join(responseUtility.makeResponse(false, null, "Limit should not be 0", null));
+        } else if (isNaN(limit)) {
+            return Promise.join(responseUtility.makeResponse(false, null, "Limit shound be a numeric", null));
+        }
+        limit = parseInt(limit);
+    
+        return Employee.getEmployeeList(pageNo, limit,
             options['skills'], options['gender']).then((result) => {
                 if (!result) {
                     var response = responseUtility.makeResponse(false, null, "Invalid request", 401);
