@@ -47,7 +47,7 @@ employeeSchema.statics = {
             criteria["$and"].push({ gender: gender })
         }
         criteria = (criteria["$and"].length > 0) ? criteria : {};
-        return Employee.find(criteria).skip((pageNo - 1) * limit).limit(limit).exec();
+        return Employee.find(criteria, 'displayName emailAddress skills employeeCode gender').skip((pageNo - 1) * limit).limit(limit).exec();
     },
 
     deleteEmployeeFromDatabase :(userId) => {

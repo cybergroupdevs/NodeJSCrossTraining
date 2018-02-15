@@ -89,6 +89,7 @@ var employee = {
             }
             return Employee.saveEmployeeToDatabase(userObj).then((result) => {
                 if (result) {
+                    result = employee.responseDetail(result);  //only taking required fields 
                     var response = responseUtility.makeResponse(true, { employee: result }, null, null);
                     return response;
                 }
@@ -123,8 +124,9 @@ var employee = {
                 userType: userObj.userType,
                 userId: userObj._id
             }
+            userObj = employee.responseDetail(userObj);  //only taking required fields 
             var response = responseUtility.makeResponse(true, { employee: userObj, "token": authentication.jwtAuthentication.generate(payload) },
-                null, null);
+                null, null); 
             return response;
         }, (error) => {
             return Promise.join(responseUtility.makeResponse(false, null, error, 400));
@@ -146,7 +148,7 @@ var employee = {
                 response = responseUtility.makeResponse(false, null, "Employee Not Exist.", 401);
                 return response;
             }
-
+            result = employee.responseDetail(result);  //only taking required fields 
             response = responseUtility.makeResponse(true, result, "", 202);
             return response;
         }, (error) => {
@@ -209,9 +211,41 @@ var employee = {
                 return Promise.join(responseUtility.makeResponse(false, null, error, 400));
             })
         }
+    },
+
+    responseDetail: (userObj) => {
+        if (userObj) {
+            var response = {
+                "firstName": userObj.firstName,
+                "middleName": userObj.middleName,
+                "lastName": userObj.lastName,
+                "displayName": userObj.displayName,
+                "mobileNumber": userObj.mobileNumber,
+                "dateOfBirth": userObj.dateOfBirth,
+                "gender": userObj.gender,
+                "address": userObj.address,
+                "city": userObj.city,
+                "country": userObj.country,
+                "state": userObj.state,
+                "zipCode": userObj.zipCode,
+                "isActive": userObj.isActive,
+                "isDelete": userObj.isDelete,
+                "isBlockedByAdmin": userObj.isBlockedByAdmin,
+                "userType": userObj.userType,
+                "bio": userObj.bio,
+                "tags": userObj.tags,
+                "skills": userObj.skills,
+                "createdAt": userObj.createdAt,
+                "updatedAt": userObj.updatedAt,
+                "_id": userObj._id,
+                "employeeCode": userObj.employeeCode,
+                "emailAddress": userObj.emailAddress,
+            }
+            return response;
+        } else {
+            return null;
+        }
     }
-
-
 };
 
 module.exports = { employee };
