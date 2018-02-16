@@ -172,38 +172,46 @@
 *     HTTP/1.1 200 OK
 *{
     "status": true,
-    "data": {
-        "firstName": "Test",
-        "middleName": "-",
-        "lastName": "Cyber",
-        "displayName": "Test - Cyber",
-        "mobileNumber": "999999999",
-        "dateOfBirth": "1987-12-06T18:30:00.000Z",
-        "gender": "F",
-        "address": "Noida Sector - 03",
-        "city": "Noida",
-        "country": "India",
-        "state": "Ghaziabad",
-        "zipCode": "",
-        "isActive": true,
-        "isDelete": false,
-        "isBlockedByAdmin": false,
-        "userType": "USER",
-        "bio": "",
-        "tags": [],
-        "skills": [
-            "Objective-C",
-            "C++",
-            "ROR"
-        ],
-        "createdAt": "2018-02-14T07:50:55.661Z",
-        "updatedAt": "2018-02-14T07:50:55.661Z",
-        "_id": "5a83ea5fe81b131863494a28",
-        "employeeCode": "CGI-000",
-        "emailAddress": "testuser@cygrp.com",
-        "location": "Noida",
-    },
-    "mesage": null,
+    "data": [
+        {
+            "displayName": "Nitesh Gautam",
+            "gender": "M",
+            "skills": [],
+            "_id": "5a83fadcb2fe890014772a01",
+            "employeeCode": "CGI-167",
+            "emailAddress": "nitesh.gautam@cygrp.com"
+        },
+        {
+            "displayName": "Aman Sharma",
+            "gender": "M",
+            "skills": [
+                "java",
+                "android",
+                "nodejs",
+                "mongo"
+            ],
+            "_id": "5a8402adafe15569480adb7d",
+            "employeeCode": "CGI-230",
+            "emailAddress": "aman.sharma@cygrp.com"
+        },
+        {
+            "displayName": "aashish issar",
+            "gender": "M",
+            "skills": [],
+            "_id": "5a85427157b48005e4238445",
+            "employeeCode": "CGI-250",
+            "emailAddress": "aashish.issar@cygrp.com"
+        },
+        {
+            "displayName": "Vijay Masiwal",
+            "gender": "M",
+            "skills": [],
+            "_id": "5a8670be9c90f23dd8757b4e",
+            "employeeCode": "CGI-241",
+            "emailAddress": "vijay.masiwal@cygrp.com"
+        }
+    ],
+    "mesage": "List returned",
     "statusCode": null
 }
 */
@@ -225,3 +233,57 @@
     "statusCode": null
 }
 */
+
+/**
+ * @api {POST} /addskill /addskill
+ * @apiName Add Skill
+ * @apiGroup Skill
+ * 
+ * @apiParam {String} name SKILL NAME handling case sensitive
+ * @apiParam {String} type SKILL TYPE {Default : TECHNICAL}
+ * @apiParam {String} token  Token in header
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+    "status": true,
+    "data": {
+        "type": "technical",
+        "_id": "5a866dacefab0f0014c71591",
+        "name": "NODE JS",
+        "__v": 0
+    },
+    "mesage": "Skill added successfully",
+    "statusCode": null
+}
+ */
+
+ /**
+ * @api {GET} /listskill /listskill
+ * @apiName List Skill
+ * @apiGroup Skill
+ * 
+ * @apiParam {String} token  Token in header
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ * {
+    "status": true,
+    "data": [
+        {
+            "type": "Framework",
+            "_id": "5a853ad470a6655678ed614d",
+            "name": "ANDROID",
+            "__v": 0
+        },
+        {
+            "type": "technical",
+            "_id": "5a866dacefab0f0014c71591",
+            "name": "NODE JS",
+            "__v": 0
+        }
+    ],
+    "mesage": "Skill list returned",
+    "statusCode": null
+}
+ */

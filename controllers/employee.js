@@ -240,6 +240,7 @@ var employee = {
                 "_id": userObj._id,
                 "employeeCode": userObj.employeeCode,
                 "emailAddress": userObj.emailAddress,
+                "location" : userObj.location
             }
             return response;
         } else {
