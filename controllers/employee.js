@@ -179,7 +179,8 @@ var employee = {
         limit = parseInt(limit);
     
         return Employee.getEmployeeList(pageNo, limit,
-            options['skills'], options['gender']).then((result) => {
+            options['skills'], options['gender'], 
+            options['searchkey'], options['sortkey'], options['sortorder']).then((result) => {
                 if (!result) {
                     var response = responseUtility.makeResponse(false, null, "Invalid request", 401);
                     return response;

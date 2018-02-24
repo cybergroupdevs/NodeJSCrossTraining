@@ -167,7 +167,9 @@
 * @apiParam {Number} limit limit the number of rows.
 * @apiParam {Number} pageNo  Page Number.
 * @apiParam {String} filter Skills comma separated(skills=nodejs,mongo).
-*
+* @apiParam {String} searchkey keywork for search on employeeCode, displayName, emailAddress
+* @apiParam {String} sortkey fields supported are employeeCode, displayName, emailAddress
+* @apiParam {String} sortorder value can asc, dsc : default asc
 * @apiSuccessExample {json} Success-Response:
 *     HTTP/1.1 200 OK
 *{
