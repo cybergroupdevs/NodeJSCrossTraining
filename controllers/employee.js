@@ -275,11 +275,14 @@ var employee = {
                 user.state = options['zipCode'];
             }
 
+            if (options['bio']) {
+                user.bio = options['bio'];
+            }
             // if (options['dateOfBirth']) {
             //     user.dateOfBirth = options['dateOfBirth'];
             // }
-            user['displayName'] = user['firstName'] + (user['middleName'] ? (" " + user['middleName']) : "") + (user['lastName'] ? (" " + user['lastName']) : "")
-
+            user.displayName = user['firstName'] + (user['middleName'] ? (" " + user['middleName']) : "") + (user['lastName'] ? (" " + user['lastName']) : "")
+            
             //end update 
             return Employee.updateEmployeeDatabase(user).then((result1) => {
                 if (!result1) {

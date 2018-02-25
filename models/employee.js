@@ -103,7 +103,11 @@ employeeSchema.statics = {
     },
 
     updateEmployeeDatabase: (user) => {
-        return Employee.findOneAndUpdate({ _id: user._id }, { $set: { "firstName": user.firstName,"middleName":user.middleName ,"lastName": user.lastName,"gender":user.gender,"address": user.address,"mobileNumber": user.mobileNumber,"city":user.city,"country": user.country,"state":user.state,"zipCode":user.zipCode} },{new: true})   .exec();
+        return Employee.findOneAndUpdate({ _id: user._id }, { $set: { displayName :  user.displayName, 
+            "firstName": user.firstName,"middleName":user.middleName ,"lastName": user.lastName,
+            "gender":user.gender,"address": user.address,"mobileNumber": user.mobileNumber,
+            "city":user.city,"country": user.country,"state":user.state,"zipCode":user.zipCode, 
+            bio : user.bio} },{new: true})   .exec();
     }
 
 };
