@@ -47,6 +47,9 @@ var employee = {
             if (options['gender']) {
                 userObj.gender = options['gender'];
             }
+            if (options['bio']) {
+                userObj.bio = options['bio'];
+            }
             if (options['address']) {
                 userObj.address = options['address'];
             }
