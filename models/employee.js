@@ -3,14 +3,14 @@ const dbSchema = require('./../schema/schema');
 const crypto = require('./../utility/response').encrypt_decrypt;
 
 var employeeSchema = new mongoose.Schema(dbSchema.collections["employee"]);
-employeeSchema.index({'emailAddress' : 1}, {unique : true});
-employeeSchema.index({'employeeCode' : 1}, {unique : true});
+employeeSchema.index({ 'emailAddress': 1 }, { unique: true });
+employeeSchema.index({ 'employeeCode': 1 }, { unique: true });
 
 employeeSchema.methods = {
-	validatePassword:(password, passwordHash, passwordSalt) => {
-        var encyrptKey = crypto.encrypt(password,passwordSalt);
-        return (encyrptKey == passwordHash);	
-        }
+    validatePassword: (password, passwordHash, passwordSalt) => {
+        var encyrptKey = crypto.encrypt(password, passwordSalt);
+        return (encyrptKey == passwordHash);
+    }
 };
 
 employeeSchema.statics = {
@@ -24,11 +24,11 @@ employeeSchema.statics = {
     },
 
     getEmployeeByEmail: (emailAddress) => {
-        return Employee.findOne({"emailAddress":emailAddress}).exec();
+        return Employee.findOne({ "emailAddress": emailAddress }).exec();
     },
 
-    getUserById:(userId) => {
-        return Employee.findOne({_id :userId}).exec();
+    getUserById: (userId) => {
+        return Employee.findOne({ _id: userId }).exec();
     },
 
     getEmployeeList: (pageNo, limit, skills, gender, searchkey, sortkey, sortOrder) => {
@@ -98,11 +98,15 @@ employeeSchema.statics = {
         return Employee.find(criteria, 'displayName emailAddress skills employeeCode gender').sort(sortOption).skip((pageNo - 1) * limit).limit(limit).exec();
     },
 
-    deleteEmployeeFromDatabase :(userId) => {
-        return Employee.findOneAndRemove({_id :userId}).exec();
+    deleteEmployeeFromDatabase: (userId) => {
+        return Employee.findOneAndRemove({ _id: userId }).exec();
+    },
+
+    updateEmployeeDatabase: (user) => {
+        return Employee.findOneAndUpdate({ _id: user._id }, { $set: { "firstName": user.firstName,"middleName":user.middleName ,"lastName": user.lastName,"gender":user.gender,"address": user.address,"mobileNumber": user.mobileNumber,"city":user.city,"country": user.country,"state":user.state,"zipCode":user.zipCode} },{new: true})   .exec();
     }
 
 };
 
 var Employee = mongoose.model('Employee', employeeSchema);
-module.exports = {Employee};
+module.exports = { Employee };

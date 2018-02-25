@@ -13,4 +13,15 @@ router.delete('/deleteEmployee', (req, res) => {
 });
 
 
+//Added api to update user
+router.post('/updateEmployee', (req, res) => {
+    return Employee.updateUser(req.body, req.user).then((response) =>{
+        res.send(response)
+    },(error)=>{
+        res.send(error)
+    })
+});
+
+
+
 module.exports = router;

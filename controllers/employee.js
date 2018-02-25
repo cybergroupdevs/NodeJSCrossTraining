@@ -80,9 +80,6 @@ var employee = {
 
             userObj['displayName'] = userObj['firstName'] + (userObj['middleName'] ? (" " + userObj['middleName']) : "") + (userObj['lastName'] ? (" " + userObj['lastName']) : "")
             userObj['isBlockedByAdmin'] = false;
-            if (options['isAdmin']) {
-                userObj['isAdmin'] = false;
-            }
             if (options['skills']) {
                 var technicalSkills = options['skills']
                 if (!Array.isArray(technicalSkills)) {
@@ -215,6 +212,86 @@ var employee = {
                 return Promise.join(responseUtility.makeResponse(false, null, error, 400));
             })
         }
+    },
+
+    
+    updateUser: (options, userObj) => {
+        //if we are getting user id as param
+        console.log(userObj);
+        if (options['userId']) {
+            //check if user Id match with login user 
+            if (userObj.userId !== options['userId']) {
+                //check  user have admin rights 
+                if (userObj.userType === "USER") {
+                    return Promise.join(responseUtility.makeResponse(false, null, "you can't process this request please contact to admin", 400));
+                }
+            }
+        }
+        else {
+            // set Id to login user id
+            options['userId'] = userObj.userId;
+        }
+      return  Employee.getUserById(options['userId']).then((result) => {
+            var response;
+            var user;
+            if (result == null) {
+                response = responseUtility.makeResponse(false, null, "Employee Not Exist.", 401);
+                return response;
+            }
+            console.log(result);
+            user = result;
+
+            //start update
+
+            if (options['firstName']) {
+                user.firstName = options['firstName'];
+            }
+            if (options['middleName']) {
+                user.middleName = options['middleName'];
+            }
+            if (options['lastName']) {
+                user.lastName = options['lastName'];
+            }
+            if (options['gender']) {
+                user.gender = options['gender'];
+            }
+            if (options['address']) {
+                user.address = options['address'];
+            }
+           
+            if (options['mobileNumber']) {
+                user.mobileNumber = options['mobileNumber'];
+            }
+            if (options['city']) {
+                user.city = options['city'];
+            }
+            if (options['country']) {
+                user.country = options['country'];
+            }
+            if (options['state']) {
+                user.state = options['state'];
+            }
+            if (options['zipCode']) {
+                user.state = options['zipCode'];
+            }
+           
+            // if (options['dateOfBirth']) {
+            //     user.dateOfBirth = options['dateOfBirth'];
+            // }
+            user['displayName'] = user['firstName'] + (user['middleName'] ? (" " + user['middleName']) : "") + (user['lastName'] ? (" " + user['lastName']) : "")
+           
+            //end update 
+        return   Employee.updateEmployeeDatabase(user).then((result1)=>{
+         console.log(result1);
+         response = responseUtility.makeResponse(true,result1,null,null);
+         return response;
+        }); 
+
+
+        }, (error) => {
+            return Promise.join(responseUtility.makeResponse(false, null, error, 400));
+        });
+
     },
 
     responseDetail: (userObj) => {
