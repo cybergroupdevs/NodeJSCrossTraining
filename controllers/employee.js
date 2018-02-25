@@ -290,6 +290,7 @@ var employee = {
                     response = responseUtility.makeResponse(false, null, "Unable to update user", 401);
                     return response;
                 }
+                result1 = employee.responseDetail(result1);  //only taking required fields 
                 response = responseUtility.makeResponse(true, result1, null, null);
                 return response;
             }, (error) => {
