@@ -217,7 +217,7 @@ var employee = {
 
     updateUser: (options, userObj) => {
         //if we are getting user id as param
-        console.log(userObj);
+        
         if (options['userId']) {
             //check if user Id match with login user 
             if (userObj.userId !== options['userId']) {
@@ -238,7 +238,7 @@ var employee = {
                 response = responseUtility.makeResponse(false, null, "Employee Not Exist.", 401);
                 return response;
             }
-            console.log(result);
+            
             user = result;
 
             //start update
@@ -246,11 +246,11 @@ var employee = {
             if (options['firstName']) {
                 user.firstName = options['firstName'];
             }
-            console.log(options['middleName'] !== null && options['middleName'] !== undefined)
+            
             if (options['middleName'] !== null && options['middleName'] !== undefined) {
                 user.middleName = options['middleName'];
             }
-            if (options['lastName']  !== null) {
+            if (options['lastName']) {
                 user.lastName = options['lastName'];
             }
             if (options['gender']) {
