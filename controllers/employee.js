@@ -246,10 +246,11 @@ var employee = {
             if (options['firstName']) {
                 user.firstName = options['firstName'];
             }
-            if (options['middleName']) {
+            console.log(options['middleName'] !== null && options['middleName'] !== undefined)
+            if (options['middleName'] !== null && options['middleName'] !== undefined) {
                 user.middleName = options['middleName'];
             }
-            if (options['lastName']) {
+            if (options['lastName']  !== null) {
                 user.lastName = options['lastName'];
             }
             if (options['gender']) {
