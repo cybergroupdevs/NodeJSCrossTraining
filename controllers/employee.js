@@ -1,4 +1,4 @@
-const mongoose  = require('mongoose');
+const mongoose = require('mongoose');
 const responseUtility = require('./../utility/response').response;
 const crypto = require('./../utility/response').encrypt_decrypt;
 const Employee = require('./../models/employee').Employee; //model class
@@ -126,7 +126,7 @@ var employee = {
             }
             userObj = employee.responseDetail(userObj);  //only taking required fields 
             var response = responseUtility.makeResponse(true, { employee: userObj, "token": authentication.jwtAuthentication.generate(payload) },
-                null, null); 
+                null, null);
             return response;
         }, (error) => {
             return Promise.join(responseUtility.makeResponse(false, null, error, 400));
@@ -159,14 +159,14 @@ var employee = {
     employeeList: (options) => {
         //Handling page number
         var pageNo = options['pageNo'];
-        if(!pageNo || pageNo <= 0) {
+        if (!pageNo || pageNo <= 0) {
             return Promise.join(responseUtility.makeResponse(false, null, "Page no should not be empty or 0", null));
         }
-        if(isNaN(pageNo)) {
+        if (isNaN(pageNo)) {
             return Promise.join(responseUtility.makeResponse(false, null, "Page number shound be a numeric", null));
         }
         pageNo = parseInt(pageNo);
-       
+
         //Handling page limit
         var limit = options['limit'];
         if (!limit) {
@@ -177,9 +177,9 @@ var employee = {
             return Promise.join(responseUtility.makeResponse(false, null, "Limit shound be a numeric", null));
         }
         limit = parseInt(limit);
-    
+
         return Employee.getEmployeeList(pageNo, limit,
-            options['skills'], options['gender'], 
+            options['skills'], options['gender'],
             options['searchkey'], options['sortkey'], options['sortorder']).then((result) => {
                 if (!result) {
                     var response = responseUtility.makeResponse(false, null, "Invalid request", 401);
@@ -214,7 +214,7 @@ var employee = {
         }
     },
 
-    
+
     updateUser: (options, userObj) => {
         //if we are getting user id as param
         console.log(userObj);
@@ -231,7 +231,7 @@ var employee = {
             // set Id to login user id
             options['userId'] = userObj.userId;
         }
-      return  Employee.getUserById(options['userId']).then((result) => {
+        return Employee.getUserById(options['userId']).then((result) => {
             var response;
             var user;
             if (result == null) {
@@ -258,7 +258,7 @@ var employee = {
             if (options['address']) {
                 user.address = options['address'];
             }
-           
+
             if (options['mobileNumber']) {
                 user.mobileNumber = options['mobileNumber'];
             }
@@ -274,18 +274,23 @@ var employee = {
             if (options['zipCode']) {
                 user.state = options['zipCode'];
             }
-           
+
             // if (options['dateOfBirth']) {
             //     user.dateOfBirth = options['dateOfBirth'];
             // }
             user['displayName'] = user['firstName'] + (user['middleName'] ? (" " + user['middleName']) : "") + (user['lastName'] ? (" " + user['lastName']) : "")
-           
+
             //end update 
-        return   Employee.updateEmployeeDatabase(user).then((result1)=>{
-         console.log(result1);
-         response = responseUtility.makeResponse(true,result1,null,null);
-         return response;
-        }); 
+            return Employee.updateEmployeeDatabase(user).then((result1) => {
+                if (!result1) {
+                    response = responseUtility.makeResponse(false, null, "Unable to update user", 401);
+                    return response;
+                }
+                response = responseUtility.makeResponse(true, result1, null, null);
+                return response;
+            }, (error) => {
+                return Promise.join(responseUtility.makeResponse(false, null, error, 400));
+            });
 
 
         }, (error) => {
@@ -321,7 +326,7 @@ var employee = {
                 "_id": userObj._id,
                 "employeeCode": userObj.employeeCode,
                 "emailAddress": userObj.emailAddress,
-                "location" : userObj.location
+                "location": userObj.location
             }
             return response;
         } else {
